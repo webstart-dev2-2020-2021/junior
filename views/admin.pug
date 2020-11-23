@@ -1,0 +1,31 @@
+html
+    head
+        title Page du title
+        meta(charset='utf-8')
+        link(href='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css', rel='stylesheet', integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK", crossorigin="anonymous")
+        link(rel="stylesheet", href="/css/style.css")
+
+    body
+        .container
+            .jumbotron.mt-3
+                include nav.pug
+                h1 Users !
+                hr
+
+
+                h6 MyUsers
+
+                div.my-3.p-3.bg-white.rounded.shadow-sm
+                    div.media.text-muted.pt-3
+                    div.media-body.pb-3.mb-0.small.lh-125.border-bottom.border-gray
+                        strong.text-gray-dark Utlisateur 1
+
+                div.my-3.p-3.bg-white.rounded.shadow-sm
+                    div.media.text-muted.pt-3
+                    div.media-body.pb-3.mb-0.small.lh-125.border-bottom.border-gray
+                        strong.text-gray-dark Utlisateur 2
+
+                div.my-3.p-3.bg-white.rounded.shadow-sm
+                    div.media.text-muted.pt-3
+                    div.media-body.pb-3.mb-0.small.lh-125.border-bottom.border-gray
+                        strong.text-gray-dark Utlisateur 3

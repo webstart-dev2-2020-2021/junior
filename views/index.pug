@@ -1,0 +1,17 @@
+html
+    head
+        title Page du title
+        meta(charset='utf-8')
+        link(href='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css', rel='stylesheet', integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK", crossorigin="anonymous")
+        link(rel="stylesheet", href="/css/style.css")
+
+    body
+        .container
+            .jumbotron.mt-3
+                include nav.pug
+                h1 Bienvenue !
+            p.lead
+                 |Ce chat permet au parieurs sportifs amateurs de débattre sur les événements sportifs à venir ou passés!
+            //a.btn.btn-lg.btn-block.btn-outline-primary(href='/chat.pug') Découvrir
+
+            img.img(src="/img/sport.jpg", alt="", style='width:920px')

@@ -1,0 +1,22 @@
+.mt-3, .my-3 {
+    margin-top: 1rem!important;
+}
+
+.jumbotron {
+    padding: 4rem 2rem;
+}
+
+.jumbotron {
+    padding: 3rem 6rem;
+    margin-bottom: 2rem;
+    background-color: #e9ecef;
+    border-radius: .3rem;
+}
+
+.container, .container-sm {
+    max-width: 940px;
+}
+
+.lead{
+    text-align: center;
+}
