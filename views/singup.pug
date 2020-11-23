@@ -13,10 +13,18 @@ html
 
                 form(action="/singup", method="post")
                 div.form-group
-                label.for.exampleInputEmail1 Email address
-                input(type="email").email.form-control.exampleInputEmail
-                div.form-group
-                label.for.exampleInputPassword1 Password
-                input(type="password").type.password.form-control.exampleInputPassword1
+                label.for.exampleInputEmail1 Nom d'utilisateur:
+                input#username.form-control.form-control-md(type="username", name="username" placeholder="Entrez votre nom d'utilisateur...")
                 br
-                button(type="submit").submit.btn.btn-primary.Submit SUBMIT
+                label.for.exampleInputEmail1 Adresse mail:
+                input#email.input(type="email", name="email" placeholder="Entrez votre email...").email.form-control.exampleInputEmail
+                div.form-group
+                br
+                label.for.exampleInputEmail1 Mot de passe:
+                input#password.input(type="password").type.password.form-control.exampleInputPassword1
+                br
+                button(type="submit").submit.btn.btn-primary.Submit s'inscrire
+                p
+                    | Vous avez un compte?
+                    a.font-weight-semibold(href='./singin')  Se connecter
+                    | .

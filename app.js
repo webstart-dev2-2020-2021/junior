@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 
 const urlencoderParser = bodyParser.urlencoded({ extended: false })
 
-const User = require('./models')
+const {User} = require('./models')
 
 const app = express()
 app.use(helmet())
@@ -22,8 +22,8 @@ app.get('/', (req, res)=>{
 //Récuperer tous les utilisateurs
 app.get('/admin', async (req, res)=>{
     //promesse
-    //
-    //
+    //fetch
+    //then
     try{
         const users = await User.findAll()
         console.log('users->', users)
@@ -39,8 +39,7 @@ app.get('/singup', (req, res) =>{
     res.render('singup.pug')
 })
 app.post('/singup', urlencoderParser, (req, res) =>{
-    console.log("POST/singup -> req.body.email:", req.body.email)
-    console.log("POST/singup -> req.body.password:", req.body.password)
+    console.log(req.body)
     res.render('singup.pug')
 })
 app.get('/singin',urlencoderParser, (req, res) =>{
