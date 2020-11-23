@@ -39,9 +39,10 @@ app.get('/singup', (req, res) =>{
     res.render('singup.pug')
 })
 app.post('/singup', urlencoderParser, (req, res) =>{
-    console.log(req.body)
+    console.log("signup",req.body)
     res.render('singup.pug')
 })
+
 app.get('/singin',urlencoderParser, (req, res) =>{
     res.render('singin.pug')
 })
