@@ -35,23 +35,27 @@ app.get('/admin', async (req, res)=>{
     }
 })
 
+// inscription:
 app.get('/singup', (req, res) =>{
     res.render('singup.pug')
 })
+
 app.post('/singup', urlencoderParser, (req, res) =>{
     console.log("signup",req.body)
     res.render('singup.pug')
 })
 
-app.get('/singin',urlencoderParser, (req, res) =>{
+// connexion:
+app.get('/singin', (req, res) =>{
     res.render('singin.pug')
-})
-app.post('/singin', (req, res) =>{
-    console.log("POST/singin -> req.body.email:", req.body.email)
-    console.log("POST/singin -> req.body.password:", req.body.password)
+});
+
+app.post('/singin', urlencoderParser, (req, res) =>{
+    console.log("singin", req.body)
     res.render('singin.pug')
 })
 
+//admin
 app.get('/admin', (req, res) => {
     res.render('admin.pug')
 })
