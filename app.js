@@ -1,10 +1,12 @@
 const express = require('express')
 const helmet = require('helmet')
 const bodyParser = require('body-parser')
+const cons = require('consolidate')
 
 const urlencoderParser = bodyParser.urlencoded({ extended: false })
 
 const {User} = require('./models')
+const {Op} = require('sequelize')
 
 const app = express()
 app.use(helmet())
@@ -15,23 +17,24 @@ app.set('view engine', './views')
 const port = 3000
 
 app.get('/', (req, res)=>{
-    res.render('index.pug')
+    res.render('index.pug', { username: 'junior' })
 })
 
 
 //Récuperer tous les utilisateurs
-app.get('/admin', async (req, res)=>{
+app.get('/admin', async (req, res) => {
     //promesse
     //fetch
     //then
     try{
         const users = await User.findAll()
-        console.log('users->', users)
-        res.render('admin.pug')
+        console.log('users ->', users)
+        res.status(200).render('admin.pug', { users })
     }catch (error) {
-        console.log('error dans le user findAll()',error)
+        console.log('error dans le user findAll() ->',error)
         //renvoyer error 500
         //res.render
+        res.status(500).render('500.pug')
     }
 })
 
@@ -40,9 +43,31 @@ app.get('/singup', (req, res) =>{
     res.render('singup.pug')
 })
 
-app.post('/singup', urlencoderParser, (req, res) =>{
-    console.log("signup",req.body)
-    res.render('singup.pug')
+app.post('/singup', urlencoderParser, async (req, res) => {
+    try{
+        console.log("singup",req.body)
+        const { email, password, username } = req.body
+        //enregistrer un nouvel utilisateur
+        const [user, created] = await User.findOrCreate({
+            where: {[Op.or]: [{username}, {email}] },
+            defaults: {
+                username,
+                email,
+                password,
+                isAdmin: true
+            }
+        })
+
+        if(!created){
+            //avertir l'user: email et usernale deja utilisé!
+            return res.status(400).render('singup.pug')
+        }
+        console.log('erreur dans POST/signup -> utilisateur crée', user)
+        res.status(200).render('singup.pug')
+    } catch (error) {
+        console.log('erreur dans POST/singnup ->', error)
+        res.status(500).render('500.pug')
+    }
 })
 
 // connexion:
