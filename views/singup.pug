@@ -10,7 +10,13 @@ html
             .jumbotron.mt-3
                 include nav.pug
                 h1 inscription
-
+                        br
+                if message
+                    div
+                        alert(class='alert alert-danger')
+                             message Merci de bien vouloir remplir tous les champs vides avant de vous inscrire!
+                        br
+                        br
                 form(action="/singup" method="post")
                     div.form-group
                     label.for.exampleInputEmail1 Nom d'utilisateur:

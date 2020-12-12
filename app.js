@@ -2,17 +2,26 @@ const express = require('express')
 const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const cons = require('consolidate')
-
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
 const urlencoderParser = bodyParser.urlencoded({ extended: false })
-
 const {User} = require('./models')
 const {Op} = require('sequelize')
-
+const {emailRegex} = require('./helpers/regex')
 const app = express()
+
 app.use(helmet())
 app.use(express.static('public'))
-
 app.set('view engine', './views')
+//ajouté par moi;
+app.use(cookieParser('secret'))
+app.use(session({cookie: {max: null}}))// a commenter
+
+app.use((req, res, next)=>{
+    res.locals.message = req.session.message
+    delete req.session.message
+    next()
+})
 
 const port = 3000
 
@@ -45,8 +54,17 @@ app.get('/singup', (req, res) =>{
 
 app.post('/singup', urlencoderParser, async (req, res) => {
     try{
+
         console.log("singup",req.body)
         const { email, password, username } = req.body
+
+        //si le champs est vide!
+        if(req.body.username == '' || req.body.email=='' || req.body.password==''){
+            req.session.message = {
+                message : 'test'
+            }
+            res.redirect('/singup')
+        }
         //enregistrer un nouvel utilisateur
         const [user, created] = await User.findOrCreate({
             where: {[Op.or]: [{username}, {email}] },
@@ -57,7 +75,6 @@ app.post('/singup', urlencoderParser, async (req, res) => {
                 isAdmin: true
             }
         })
-
         if(!created){
             //avertir l'user: email et usernale deja utilisé!
             return res.status(400).render('singup.pug')
