@@ -205,8 +205,7 @@ app.get('/admin', (req, res) => {
 })
 
 app.get('/chat', (req, res) => {
-    if (!req.user) return res.redirect('/')
-    res.status(200).res.render('chat.pug')
+    res.status(200).render('chat.pug')
 })
 
 app.get('*', (req, res) => {
