@@ -19,13 +19,22 @@ html
                 form(action="/singup" method="post")
                     div.form-group
                     label.for.exampleInputEmail1 Nom d'utilisateur:
+                        if message
+                            .alert(role="alert",class=`alert-${message.usernametype}`)
+                                != message.username
                     input#username.form-control.form-control-md(type="username", name="username" placeholder="Entrez votre nom d'utilisateur...")
                     br
                     label.for.exampleInputEmail1 Adresse mail:
+                        if message
+                                .alert(role="alert",class=`alert-${message.emailtype}`)
+                                    != message.mail
                     input#email.input(type="email" name="email" placeholder="Entrez votre email...").email.form-control.exampleInputEmail
                     div.form-group
                     br
                     label.for.exampleInputEmail1 Mot de passe:
+                        if message
+                            .alert(role="alert",class=`alert-${message.pwtype}`)
+                                != message.password
                     input#password.input(type="password" name="password").type.password.form-control.exampleInputPassword1
                     br
                     button(type="submit").submit.btn.btn-primary.Submit s'inscrire

@@ -8,6 +8,8 @@ const urlencoderParser = bodyParser.urlencoded({ extended: false })
 const {User} = require('./models')
 const {Op} = require('sequelize')
 const {emailRegex} = require('./helpers/regex')
+const {usernameRegex} = require('./helpers/regex')
+const {passwordRegex} = require('./helpers/regex')
 const app = express()
 
 app.use(helmet())
@@ -66,10 +68,35 @@ app.post('/singup', urlencoderParser, async (req, res) => {
             }
             res.redirect('/singup')
         }
+        else if(!email.match(emailRegex)){
+            req.session.message = {
+                emailtype : 'danger',
+                mail : 'Example:junior@psg.com',
+            }
+            res.redirect('/singup')
+
+        }
+        else if(!username.match(usernameRegex)){
+            req.session.message = {
+                usernametype : 'danger',
+                username : 'Example: user.junior',
+            }
+            res.redirect('/singup')
+
+        }
+
+        else if(!password.match(passwordRegex)){
+            req.session.message = {
+                pwtype : 'danger',
+                password : 'Example: "abCD1234", Entrez des chiffres, lettres en majuscules et minuscules',
+            }
+            res.redirect('/singup')
+
+        }
         else{
             req.session.message = {
                 type : 'success',
-                message : 'test'
+                message : 'Bienvenue, vous êtes bien inscrit!'
             }
             res.redirect('/singup')
 
@@ -85,9 +112,13 @@ app.post('/singup', urlencoderParser, async (req, res) => {
             }
         })
         if(!created){
-            //avertir l'user: email et usernale deja utilisé!
+            //avertir l'user: email et usernane deja utilisé!
             return res.status(400).render('singup.pug')
         }
+
+
+
+
         console.log('erreur dans POST/signup -> utilisateur crée', user)
         res.status(200).render('singup.pug')
     } catch (error) {
