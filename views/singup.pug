@@ -28,6 +28,9 @@ html
                         if message
                                 .alert(role="alert",class=`alert-${message.emailtype}`)
                                     != message.mail
+                        else if  message
+                                .alert(role="alert",class=`alert-${message.createdtype}`)
+                                    != message.created
                     input#email.input(type="email" name="email" placeholder="Entrez votre email...").email.form-control.exampleInputEmail
                     div.form-group
                     br

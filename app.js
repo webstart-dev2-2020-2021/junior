@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const cons = require('consolidate')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
 const urlencoderParser = bodyParser.urlencoded({ extended: false })
 const {User} = require('./models')
 const {Op} = require('sequelize')
@@ -19,6 +21,46 @@ app.set('view engine', './views')
 app.use(cookieParser('secret'))
 app.use(session({cookie: {max: null}}))// a commenter
 
+app.use(
+    session({
+        secret: 'unephrasetrèstrèssecrète',
+        resave: false,
+        saveUninitialized: false
+    })
+)
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+passport.serializeUser((user, done)=>{
+    done(null, user)
+})
+
+passport.deserializeUser((user, done)=>{
+    done(null, user)
+})
+
+passport.use(
+    new LocalStrategy(async (username, password, done) => {
+        try {
+            const user = await User.findOne({
+                where: { username },
+            })
+            if (!user || (user.password !== password)) {
+                return done(null, false, {
+                    success: false,
+                    message: 'Mauvais identifiants',
+                })
+            }
+            return done(null, user)
+        } catch (error) {
+            return done(error)
+        }
+    })
+)
+
+
+//pour les alerts danger, succes...
 app.use((req, res, next)=>{
     res.locals.message = req.session.message
     delete req.session.message
@@ -38,6 +80,14 @@ app.get('/admin', async (req, res) => {
     //fetch
     //then
     try{
+/*        if (!req.user.isAdmin){
+            req.session.message = {
+                notadmin : 'danger',
+                noadmin : 'vous êtes pas un admin!'
+            }
+            res.redirect('/')
+        }
+*/
         const users = await User.findAll()
         console.log('users ->', users)
         res.status(200).render('admin.pug', { users })
@@ -113,11 +163,13 @@ app.post('/singup', urlencoderParser, async (req, res) => {
         })
         if(!created){
             //avertir l'user: email et usernane deja utilisé!
-            return res.status(400).render('singup.pug')
+            req.session.message = {
+                createdtype : 'danger',
+                created : 'email exite déjà',
+            }
+            res.redirect('/singup')
+
         }
-
-
-
 
         console.log('erreur dans POST/signup -> utilisateur crée', user)
         res.status(200).render('singup.pug')
@@ -129,24 +181,49 @@ app.post('/singup', urlencoderParser, async (req, res) => {
 
 // connexion:
 app.get('/singin', (req, res) =>{
-    res.render('singin.pug')
-});
+    res.status(200).render('singin.pug')
+})
 
-app.post('/singin', urlencoderParser, (req, res) =>{
-    console.log("singin", req.body)
-    res.render('singin.pug')
+app.post(
+    '/singin',
+    urlencoderParser,
+    passport.authenticate('local',
+        {
+        successRedirect: '/singin',
+        failureRedirect: '/chat',
+    })
+)
+
+app.get('/signout', (req, res) =>{
+    req.logout()
+    res.redirect('/singin')
 })
 
 //admin
 app.get('/admin', (req, res) => {
     res.render('admin.pug')
 })
+app.get('/delete/:id', async (req, res)=> {
+    try {
+        const users = await User.findAll()
+        let id = req.params.id
+        await await User.destroy({
+            where: { id }
+        })
+        // console.log(users)
+        res.status(200).render('admin.ejs', { users })
+    } catch (error) {
+        console.error('erreur dans le User.findAll() ->', error)
+        // res.render('500.html')
+        res.status(500).render('500.ejs')
+    }
+})
 app.get('/chat', (req, res) => {
-    res.render('chat.pug')
+    if (!req.user) return res.redirect('/')
+    res.status(200).res.render('chat.pug')
 })
 
-
-app.get('*', (req, res)=> {
+app.get('*', (req, res) => {
     res.status(404).render('404.pug')
 })
 
