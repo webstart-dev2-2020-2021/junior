@@ -203,21 +203,7 @@ app.get('/signout', (req, res) =>{
 app.get('/admin', (req, res) => {
     res.render('admin.pug')
 })
-app.get('/delete/:id', async (req, res)=> {
-    try {
-        const users = await User.findAll()
-        let id = req.params.id
-        await await User.destroy({
-            where: { id }
-        })
-        // console.log(users)
-        res.status(200).render('admin.ejs', { users })
-    } catch (error) {
-        console.error('erreur dans le User.findAll() ->', error)
-        // res.render('500.html')
-        res.status(500).render('500.ejs')
-    }
-})
+
 app.get('/chat', (req, res) => {
     if (!req.user) return res.redirect('/')
     res.status(200).res.render('chat.pug')
