@@ -61,9 +61,18 @@ app.post('/singup', urlencoderParser, async (req, res) => {
         //si le champs est vide!
         if(req.body.username == '' || req.body.email=='' || req.body.password==''){
             req.session.message = {
+                type : 'danger',
+                message : 'Merci de bien vouloir remplir tous les champs vides avant de vous inscrire!'
+            }
+            res.redirect('/singup')
+        }
+        else{
+            req.session.message = {
+                type : 'success',
                 message : 'test'
             }
             res.redirect('/singup')
+
         }
         //enregistrer un nouvel utilisateur
         const [user, created] = await User.findOrCreate({
